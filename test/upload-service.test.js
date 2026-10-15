@@ -451,3 +451,64 @@ test("accepts uploads, encrypts records, authorizes review, downloads files, and
     }
   }
 });
+
+test("production identity submissions stay disabled until explicitly enabled", async () => {
+  const port = await unusedPort();
+  const productionStorage = await fs.mkdtemp(path.join(os.tmpdir(), "aivestora-production-test-"));
+  const productionService = spawn(process.execPath, ["server.js"], {
+    cwd: root,
+    env: {
+      ...process.env,
+      HOST: "0.0.0.0",
+      PORT: String(port),
+      NODE_ENV: "production",
+      ALLOW_PUBLIC_BIND: "true",
+      TRUST_PROXY: "1",
+      ENABLE_IDENTITY_SUBMISSIONS: "false",
+      ADMIN_PASSWORD: adminPassword,
+      DATA_ENCRYPTION_KEY: crypto.randomBytes(32).toString("base64"),
+      SESSION_SECRET: crypto.randomBytes(32).toString("base64"),
+      PRIVATE_UPLOAD_DIR: productionStorage
+    },
+    stdio: ["ignore", "ignore", "pipe"]
+  });
+  let output = "";
+  productionService.stderr.on("data", (chunk) => { output += chunk; });
+  const productionUrl = `http://127.0.0.1:${port}`;
+  try {
+    const deadline = Date.now() + 8000;
+    let ready = false;
+    while (Date.now() < deadline) {
+      if (productionService.exitCode !== null) {
+        throw new Error(`Production service exited early: ${output}`);
+      }
+      try {
+        const response = await fetch(`${productionUrl}/register.html`);
+        if (response.ok) {
+          ready = true;
+          break;
+        }
+      } catch (error) {
+        if (error.cause?.code !== "ECONNREFUSED") throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    assert.equal(ready, true, `Production service did not start: ${output}`);
+
+    const response = await fetch(`${productionUrl}/api/submissions`, {
+      method: "POST",
+      headers: { "x-forwarded-proto": "https" }
+    });
+    assert.equal(response.status, 503);
+    assert.match((await response.json()).error, /disabled pending production security review/);
+  } finally {
+    if (productionService.exitCode === null) {
+      productionService.kill();
+      await Promise.race([
+        once(productionService, "exit"),
+        new Promise((resolve) => setTimeout(resolve, 3000))
+      ]);
+    }
+    await fs.rm(productionStorage, { recursive: true, force: true });
+  }
+});

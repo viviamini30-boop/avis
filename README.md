@@ -23,3 +23,15 @@ Submission metadata (including SSNs), document contents, and user account record
 The server binds to `127.0.0.1` by default and refuses to bind to a public interface. It is intended for local prototype use. **Do not collect real identity documents until it is deployed behind HTTPS, access controls and storage are reviewed, and appropriate privacy, consent, retention, and identity-verification requirements have been addressed.** For a trusted HTTPS reverse proxy on the same machine, configure `HOST=127.0.0.1`, `NODE_ENV=production`, and `TRUST_PROXY=loopback`. If the proxy connects from another IP, set `TRUST_PROXY` to that specific trusted proxy IP or CIDR only. The proxy must be the only network route to this service.
 
 The service does not forward submissions by email or to a third party. An administrator must sign in to review and download them.
+
+## Render deployment (staging only)
+
+The repository includes a Render Blueprint in `render.yaml`. In Render, create a new Blueprint from `viviamini30-boop/avis` and select the `main` branch. The Blueprint uses a paid web-service plan because persistent disks are not available on Render's free web services. It provisions a 1 GB persistent disk at `/var/data` for the encrypted records and generates the administrator password, data-encryption key, and session secret as Render environment secrets.
+
+The hosted service binds to `0.0.0.0` only when `NODE_ENV=production`, `ALLOW_PUBLIC_BIND=true`, and an explicit positive `TRUST_PROXY` hop count are all configured. The Blueprint trusts one Render proxy hop and stores private data at `/var/data/private-uploads`. Do not change the proxy trust setting without verifying the hosting provider's proxy topology.
+
+**The Blueprint intentionally sets `ENABLE_IDENTITY_SUBMISSIONS=false`.** The public site can be deployed for staging, but registration and identity-document submissions return an unavailable response until this app's authentication, storage, backup and restore process, privacy controls, legal requirements, and operational access controls have been reviewed. Do not enable submissions or enter real personal data before that review. After review, an authorized operator can set `ENABLE_IDENTITY_SUBMISSIONS=true` in the Render service's environment and deploy the change.
+
+Keep independent, secure backups of `DATA_ENCRYPTION_KEY`, `SESSION_SECRET`, and the administrator password. Losing the encryption key makes stored records unrecoverable. The app uses local encrypted files and an in-process account lock, so keep the service to one instance; do not scale it horizontally. Monitor disk usage and configure and test backups before accepting any real data. Render disk snapshots are not a substitute for a tested independent backup and key-recovery process.
+
+To deploy manually instead of using the Blueprint, connect the GitHub repository as a Render **Web Service**, use `npm ci` as the build command and `npm run start:hosted` as the start command, attach a persistent disk mounted at `/var/data`, and configure the environment variables shown in `render.yaml`. Never put secrets in the repository or in the Blueprint.

@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: aivestora
+    runtime: node
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm run start:hosted
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: ALLOW_PUBLIC_BIND
+        value: "true"
+      - key: TRUST_PROXY
+        value: "1"
+      - key: PRIVATE_UPLOAD_DIR
+        value: /var/data/private-uploads
+      - key: ENABLE_IDENTITY_SUBMISSIONS
+        value: "false"
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: DATA_ENCRYPTION_KEY
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+    disk:
+      name: private-uploads
+      mountPath: /var/data
+      sizeGB: 1

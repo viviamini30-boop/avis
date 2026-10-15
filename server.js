@@ -51,16 +51,28 @@ const app = express();
 const marketWebSocketServer = new WebSocketServer({ noServer: true });
 const port = Number(process.env.PORT || 3000);
 const host = process.env.HOST || "127.0.0.1";
+const trustProxySetting = process.env.TRUST_PROXY;
+const trustProxyHops = trustProxySetting && /^\d+$/.test(trustProxySetting)
+  ? Number(trustProxySetting)
+  : null;
+const trustProxy = trustProxyHops ?? trustProxySetting ?? "loopback";
 
 if (!Number.isInteger(port) || port < 1 || port > 65535) {
   throw new Error("PORT must be a valid TCP port.");
 }
 
-if (!["127.0.0.1", "::1", "localhost"].includes(host)) {
-  throw new Error("This prototype must bind to localhost only; do not expose sensitive uploads directly.");
+const isLocalHost = ["127.0.0.1", "::1", "localhost"].includes(host);
+const isApprovedPublicBind = host === "0.0.0.0" &&
+  process.env.NODE_ENV === "production" &&
+  process.env.ALLOW_PUBLIC_BIND === "true" &&
+  Number.isSafeInteger(trustProxyHops) &&
+  trustProxyHops > 0;
+
+if (!isLocalHost && !isApprovedPublicBind) {
+  throw new Error("Public binding requires production mode, ALLOW_PUBLIC_BIND=true, and a positive numeric TRUST_PROXY hop count.");
 }
 
-app.set("trust proxy", process.env.TRUST_PROXY || "loopback");
+app.set("trust proxy", trustProxy);
 
 app.disable("x-powered-by");
 app.use(helmet({
@@ -304,6 +316,13 @@ function requireAdmin(req, res, next) {
 function requireSecureTransport(req, res, next) {
   if (process.env.NODE_ENV === "production" && !req.secure) {
     return res.status(400).json({ error: "HTTPS is required for sensitive submissions." });
+  }
+  next();
+}
+
+function requireIdentitySubmissionsEnabled(req, res, next) {
+  if (process.env.NODE_ENV === "production" && process.env.ENABLE_IDENTITY_SUBMISSIONS !== "true") {
+    return res.status(503).json({ error: "Identity submissions are disabled pending production security review." });
   }
   next();
 }
@@ -652,7 +671,7 @@ app.get("/api/market/:symbol", requireSecureTransport, requireUser, rateLimit({
   }
 });
 
-app.post("/api/submissions", requireSecureTransport, rateLimit({
+app.post("/api/submissions", requireSecureTransport, requireIdentitySubmissionsEnabled, rateLimit({
   windowMs: 60 * 60 * 1000,
   limit: 10,
   standardHeaders: "draft-8",
