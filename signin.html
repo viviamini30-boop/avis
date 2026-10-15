@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2">
+  <meta name="description" content="Sign in to your Aivestora.com account.">
+  <title>Sign in — Aivestora.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #15251f; --muted: #65716a; --green: #244d3a; --green-dark: #193d2c; --lime: #c9ed83; --paper: #f5f6f2; --line: #e5e9e1; --serif: "Manrope", sans-serif; --sans: "DM Sans", sans-serif; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .topbar { height: 76px; display: flex; align-items: center; border-bottom: 1px solid rgba(21,37,31,.08); background: rgba(245,246,242,.88); }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .nav { display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -.07em; }
+    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; background: var(--green); color: var(--lime); font-size: 15px; letter-spacing: -.08em; }
+    .back-link { color: #526057; font-size: 13px; font-weight: 600; }
+    main { display: grid; min-height: calc(100vh - 76px); place-items: center; padding: 48px 18px; }
+    .signin-card { width: min(100%, 450px); padding: 39px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 22px 65px rgba(34,58,44,.08); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: #75a45e; box-shadow: 0 0 0 4px #e6eedf; }
+    h1 { margin: 17px 0 9px; font: 600 34px/1.15 var(--serif); letter-spacing: -.055em; }
+    .intro { margin: 0 0 25px; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .field { display: grid; gap: 7px; margin-top: 15px; }
+    label { font-size: 12px; font-weight: 700; }
+    input { width: 100%; min-height: 46px; padding: 0 12px; border: 1px solid #dfe5dc; border-radius: 7px; background: #fff; color: var(--ink); font: 13px var(--sans); }
+    input:focus { outline: 3px solid #e0ecd7; border-color: #78936f; }
+    .submit { width: 100%; min-height: 48px; margin-top: 21px; border: 0; border-radius: 8px; background: var(--green); color: #fff; font: 700 13px var(--sans); cursor: pointer; transition: background .2s, transform .2s; }
+    .submit:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .submit:disabled { cursor: wait; opacity: .65; }
+    .form-status { margin: 16px 0 0; padding: 12px; border-radius: 7px; background: #f0f4eb; color: #415b46; font-size: 11px; line-height: 1.65; }
+    .form-status.error { background: #fff0ed; color: #873b2e; }
+    .form-status[hidden] { display: none; }
+    .signup { margin: 20px 0 0; color: var(--muted); text-align: center; font-size: 11px; }
+    .signup a { color: var(--green); font-weight: 700; }
+    :focus-visible { outline: 3px solid #86a979; outline-offset: 3px; }
+    @media (max-width: 540px) {
+      .wrap { width: calc(100% - 36px); }
+      .topbar { height: 66px; }
+      main { min-height: calc(100vh - 66px); padding: 28px 18px; }
+      .signin-card { padding: 28px 22px; }
+      h1 { font-size: 31px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="Aivestora.com home"><span class="brand-mark">av</span>Aivestora.com</a>
+      <a class="back-link" href="index.html">← Back to home</a>
+    </nav>
+  </header>
+  <main>
+    <section class="signin-card" aria-labelledby="signin-title">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> Your account</div>
+      <h1 id="signin-title">Sign in</h1>
+      <p class="intro" id="signin-intro">Use the email address and password you set during registration. Password recovery is not available yet.</p>
+      <form id="signin-form">
+        <div class="field">
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="submit" id="submit-button" type="submit">Sign in to dashboard</button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite" hidden></p>
+      </form>
+      <p class="signup">New to Aivestora.com? <a href="register.html">Create an account</a></p>
+    </section>
+  </main>
+  <script>
+    const signinForm = document.getElementById("signin-form");
+    const submitButton = document.getElementById("submit-button");
+    const formStatus = document.getElementById("form-status");
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("registered") === "1") {
+      document.getElementById("signin-intro").textContent = "Your account has been created. Sign in with the email and password you registered. Password recovery is not available yet.";
+    }
+
+    signinForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!signinForm.reportValidity()) return;
+      formStatus.hidden = true;
+      formStatus.classList.remove("error");
+      submitButton.disabled = true;
+      submitButton.textContent = "Signing in…";
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: signinForm.elements.email.value,
+            password: signinForm.elements.password.value
+          })
+        });
+        const responseText = await response.text();
+        let result = null;
+        if (responseText) {
+          try {
+            result = JSON.parse(responseText);
+          } catch (error) {
+            if (response.ok) throw new Error("The sign-in service returned an unexpected response. Please try again.");
+          }
+        }
+        if (!response.ok) {
+          const message = result && typeof result.error === "string"
+            ? result.error
+            : response.status === 405
+              ? "This server does not support sign-in. Start the project server and open http://127.0.0.1:3000/signin.html."
+              : response.status === 404
+                ? "The sign-in service was not found. Start the project server and open http://127.0.0.1:3000/signin.html."
+                : response.status === 401
+                  ? "Email or password is incorrect."
+                  : response.status === 429
+                    ? "Too many sign-in attempts. Please wait and try again."
+                    : `Sign in failed (HTTP ${response.status}). Please try again.`;
+          throw new Error(message);
+        }
+        if (!result || result.message !== "Signed in.") {
+          throw new Error("The sign-in service returned an unexpected response. Please try again.");
+        }
+        window.location.assign("/dashboard.html");
+      } catch (error) {
+        formStatus.textContent = error instanceof TypeError
+          ? "Could not connect to the sign-in service. Start the project server and try again."
+          : error.message;
+        formStatus.classList.add("error");
+        formStatus.hidden = false;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Sign in to dashboard";
+      }
+    });
+  </script>
+</body>
+</html>

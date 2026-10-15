@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2">
+  <meta name="description" content="Create your Aivestora.com account and get in touch with our team.">
+  <title>Sign up — Aivestora.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #15251f;
+      --muted: #65716a;
+      --green: #244d3a;
+      --green-dark: #193d2c;
+      --lime: #c9ed83;
+      --paper: #f5f6f2;
+      --line: #e5e9e1;
+      --serif: "Manrope", sans-serif;
+      --sans: "DM Sans", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .topbar { height: 76px; display: flex; align-items: center; border-bottom: 1px solid rgba(21,37,31,.08); background: rgba(245,246,242,.88); }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .nav { display: flex; justify-content: space-between; align-items: center; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; letter-spacing: -.07em; }
+    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; background: var(--green); color: var(--lime); font-size: 15px; letter-spacing: -.08em; }
+    .back-link { color: #526057; font-size: 13px; font-weight: 600; }
+    .back-link:hover { color: var(--green); }
+    main { display: grid; min-height: calc(100vh - 76px); place-items: center; padding: 48px 18px; }
+    .register-card { width: min(100%, 680px); padding: 39px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 22px 65px rgba(34,58,44,.08); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: #75a45e; box-shadow: 0 0 0 4px #e6eedf; }
+    h1 { margin: 17px 0 9px; font: 600 36px/1.15 var(--serif); letter-spacing: -.055em; }
+    .intro { margin: 0 0 25px; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: grid; align-content: start; gap: 7px; }
+    .field-full { grid-column: 1 / -1; }
+    label { font-size: 12px; font-weight: 700; }
+    input, select { width: 100%; min-height: 46px; padding: 0 12px; border: 1px solid #dfe5dc; border-radius: 7px; background: #fff; color: var(--ink); font: 13px var(--sans); }
+    input[type="file"] { padding: 8px; }
+    input[type="file"]::file-selector-button { margin-right: 10px; padding: 6px 9px; border: 0; border-radius: 5px; background: #f0f4eb; color: var(--green); font: 600 11px var(--sans); cursor: pointer; }
+    input::placeholder { color: #9ba49c; }
+    input:focus, select:focus { outline: 3px solid #e0ecd7; border-color: #78936f; }
+    .section-title { grid-column: 1 / -1; margin: 5px 0 -7px; font: 700 14px var(--sans); }
+    .field-hint { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .privacy-note { grid-column: 1 / -1; margin: 0; padding: 11px 12px; border-radius: 7px; background: #fff6e6; color: #72551c; font-size: 11px; line-height: 1.6; }
+    .consent { display: flex; align-items: flex-start; gap: 10px; margin-top: 18px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .consent input { width: 15px; min-height: 15px; height: 15px; flex-shrink: 0; margin: 1px 0 0; accent-color: var(--green); }
+    .submit { width: 100%; min-height: 48px; margin-top: 21px; border: 0; border-radius: 8px; background: var(--green); color: #fff; font: 700 13px var(--sans); cursor: pointer; transition: background .2s, transform .2s; }
+    .submit:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .notice { margin: 16px 0 0; padding: 12px; border-radius: 7px; background: #f0f4eb; color: #415b46; font-size: 11px; line-height: 1.65; }
+    .notice strong { display: block; margin-bottom: 3px; }
+    .notice[hidden] { display: none; }
+    .form-status { margin: 14px 0 0; padding: 12px; border-radius: 7px; background: #f0f4eb; color: #415b46; font-size: 11px; line-height: 1.65; }
+    .form-status.error { background: #fff0ed; color: #873b2e; }
+    .form-status[hidden] { display: none; }
+    .disclaimer { margin: 19px 0 0; color: #89938b; text-align: center; font-size: 10px; line-height: 1.6; }
+    :focus-visible { outline: 3px solid #86a979; outline-offset: 3px; }
+    @media (max-width: 540px) {
+      .wrap { width: calc(100% - 36px); }
+      .topbar { height: 66px; }
+      main { min-height: calc(100vh - 66px); padding: 28px 18px; }
+      .register-card { padding: 28px 22px; }
+      h1 { font-size: 32px; }
+      .form-grid { grid-template-columns: 1fr; gap: 14px; }
+      .field-full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="Aivestora.com home"><span class="brand-mark">av</span>Aivestora.com</a>
+      <a class="back-link" href="signin.html">Already registered? Sign in</a>
+    </nav>
+  </header>
+  <main>
+    <section class="register-card" aria-labelledby="register-title">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> Get started</div>
+      <h1 id="register-title">Create your Aivestora.com account</h1>
+      <p class="intro">Set your sign-in password, then securely submit your information and identity documents for review.</p>
+      <form id="register-form" enctype="multipart/form-data">
+        <div class="form-grid">
+          <div class="field field-full">
+            <label for="full-name">Full name</label>
+            <input id="full-name" name="fullName" type="text" autocomplete="name" placeholder="Your name" required>
+          </div>
+          <div class="field field-full">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="account-password">Password</label>
+            <input id="account-password" name="accountPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" aria-describedby="password-hint" required>
+            <p class="field-hint" id="password-hint">Use 12–128 characters. Your password is stored as a one-way hash.</p>
+          </div>
+          <div class="field">
+            <label for="confirm-password">Confirm password</label>
+            <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone number <span style="color:#89938b;font-weight:400"></span></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+1 555 000 0000" required>
+          </div>
+          <div class="field">
+            <label for="country">Country or region</label>
+            <select id="country" name="country" autocomplete="country-name" required>
+              <option value="" selected disabled>Select your country or region</option>
+              <option>Afghanistan</option>
+              <option>Albania</option>
+              <option>Algeria</option>
+              <option>Andorra</option>
+              <option>Angola</option>
+              <option>Antigua and Barbuda</option>
+              <option>Argentina</option>
+              <option>Armenia</option>
+              <option>Australia</option>
+              <option>Austria</option>
+              <option>Azerbaijan</option>
+              <option>Bahamas</option>
+              <option>Bahrain</option>
+              <option>Bangladesh</option>
+              <option>Barbados</option>
+              <option>Belarus</option>
+              <option>Belgium</option>
+              <option>Belize</option>
+              <option>Benin</option>
+              <option>Bhutan</option>
+              <option>Bolivia</option>
+              <option>Bosnia and Herzegovina</option>
+              <option>Botswana</option>
+              <option>Brazil</option>
+              <option>Brunei</option>
+              <option>Bulgaria</option>
+              <option>Burkina Faso</option>
+              <option>Burundi</option>
+              <option>Cabo Verde</option>
+              <option>Cambodia</option>
+              <option>Cameroon</option>
+              <option>Canada</option>
+              <option>Central African Republic</option>
+              <option>Chad</option>
+              <option>Chile</option>
+              <option>China</option>
+              <option>Colombia</option>
+              <option>Comoros</option>
+              <option>Congo (Republic of the)</option>
+              <option>Costa Rica</option>
+              <option>Côte d’Ivoire</option>
+              <option>Croatia</option>
+              <option>Cuba</option>
+              <option>Cyprus</option>
+              <option>Czechia</option>
+              <option>Democratic Republic of the Congo</option>
+              <option>Denmark</option>
+              <option>Djibouti</option>
+              <option>Dominica</option>
+              <option>Dominican Republic</option>
+              <option>Ecuador</option>
+              <option>Egypt</option>
+              <option>El Salvador</option>
+              <option>Equatorial Guinea</option>
+              <option>Eritrea</option>
+              <option>Estonia</option>
+              <option>Eswatini</option>
+              <option>Ethiopia</option>
+              <option>Fiji</option>
+              <option>Finland</option>
+              <option>France</option>
+              <option>Gabon</option>
+              <option>Gambia</option>
+              <option>Georgia</option>
+              <option>Germany</option>
+              <option>Ghana</option>
+              <option>Greece</option>
+              <option>Grenada</option>
+              <option>Guatemala</option>
+              <option>Guinea</option>
+              <option>Guinea-Bissau</option>
+              <option>Guyana</option>
+              <option>Haiti</option>
+              <option>Honduras</option>
+              <option>Hungary</option>
+              <option>Iceland</option>
+              <option>India</option>
+              <option>Indonesia</option>
+              <option>Iran</option>
+              <option>Iraq</option>
+              <option>Ireland</option>
+              <option>Israel</option>
+              <option>Italy</option>
+              <option>Jamaica</option>
+              <option>Japan</option>
+              <option>Jordan</option>
+              <option>Kazakhstan</option>
+              <option>Kenya</option>
+              <option>Kiribati</option>
+              <option>Kuwait</option>
+              <option>Kyrgyzstan</option>
+              <option>Laos</option>
+              <option>Latvia</option>
+              <option>Lebanon</option>
+              <option>Lesotho</option>
+              <option>Liberia</option>
+              <option>Libya</option>
+              <option>Liechtenstein</option>
+              <option>Lithuania</option>
+              <option>Luxembourg</option>
+              <option>Madagascar</option>
+              <option>Malawi</option>
+              <option>Malaysia</option>
+              <option>Maldives</option>
+              <option>Mali</option>
+              <option>Malta</option>
+              <option>Marshall Islands</option>
+              <option>Mauritania</option>
+              <option>Mauritius</option>
+              <option>Mexico</option>
+              <option>Micronesia</option>
+              <option>Moldova</option>
+              <option>Monaco</option>
+              <option>Mongolia</option>
+              <option>Montenegro</option>
+              <option>Morocco</option>
+              <option>Mozambique</option>
+              <option>Myanmar</option>
+              <option>Namibia</option>
+              <option>Nauru</option>
+              <option>Nepal</option>
+              <option>Netherlands</option>
+              <option>New Zealand</option>
+              <option>Nicaragua</option>
+              <option>Niger</option>
+              <option>Nigeria</option>
+              <option>North Korea</option>
+              <option>North Macedonia</option>
+              <option>Norway</option>
+              <option>Oman</option>
+              <option>Pakistan</option>
+              <option>Palau</option>
+              <option>Palestine</option>
+              <option>Panama</option>
+              <option>Papua New Guinea</option>
+              <option>Paraguay</option>
+              <option>Peru</option>
+              <option>Philippines</option>
+              <option>Poland</option>
+              <option>Portugal</option>
+              <option>Qatar</option>
+              <option>Romania</option>
+              <option>Russia</option>
+              <option>Rwanda</option>
+              <option>Saint Kitts and Nevis</option>
+              <option>Saint Lucia</option>
+              <option>Saint Vincent and the Grenadines</option>
+              <option>Samoa</option>
+              <option>San Marino</option>
+              <option>Sao Tome and Principe</option>
+              <option>Saudi Arabia</option>
+              <option>Senegal</option>
+              <option>Serbia</option>
+              <option>Seychelles</option>
+              <option>Sierra Leone</option>
+              <option>Singapore</option>
+              <option>Slovakia</option>
+              <option>Slovenia</option>
+              <option>Solomon Islands</option>
+              <option>Somalia</option>
+              <option>South Africa</option>
+              <option>South Korea</option>
+              <option>South Sudan</option>
+              <option>Spain</option>
+              <option>Sri Lanka</option>
+              <option>Sudan</option>
+              <option>Suriname</option>
+              <option>Sweden</option>
+              <option>Switzerland</option>
+              <option>Syria</option>
+              <option>Taiwan</option>
+              <option>Tajikistan</option>
+              <option>Tanzania</option>
+              <option>Thailand</option>
+              <option>Timor-Leste</option>
+              <option>Togo</option>
+              <option>Tonga</option>
+              <option>Trinidad and Tobago</option>
+              <option>Tunisia</option>
+              <option>Türkiye</option>
+              <option>Turkmenistan</option>
+              <option>Tuvalu</option>
+              <option>Uganda</option>
+              <option>Ukraine</option>
+              <option>United Arab Emirates</option>
+              <option>United Kingdom</option>
+              <option>United States</option>
+              <option>Uruguay</option>
+              <option>Uzbekistan</option>
+              <option>Vanuatu</option>
+              <option>Vatican City</option>
+              <option>Venezuela</option>
+              <option>Vietnam</option>
+              <option>Yemen</option>
+              <option>Zambia</option>
+              <option>Zimbabwe</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <h2 class="section-title">Identity details <span style="color:#89938b;font-weight:400"></span></h2>
+          <div class="field field-full">
+            <label for="ssn">Social Security number (SSN)</label>
+            <input id="ssn" name="ssn" type="password" inputmode="numeric" autocomplete="off" maxlength="11" pattern="[0-9]{3}-?[0-9]{2}-?[0-9]{4}" placeholder="XXX-XX-XXXX" aria-describedby="ssn-hint" required>
+            <p class="field-hint" id="ssn-hint">Enter 9 digits, with or without hyphens.</p>
+          </div>
+          <div class="field">
+            <label for="license-front">Driver's license — front</label>
+            <input id="license-front" name="driversLicenseFront" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" aria-describedby="license-front-hint" required>
+            <p class="field-hint" id="license-front-hint">JPEG, PNG, WebP, or PDF · max 8 MB.</p>
+          </div>
+          <div class="field">
+            <label for="license-back">Driver's license — back</label>
+            <input id="license-back" name="driversLicenseBack" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" aria-describedby="license-back-hint" required>
+            <p class="field-hint" id="license-back-hint">JPEG, PNG, WebP, or PDF · max 8 MB.</p>
+          </div>
+          <p class="privacy-note"><strong>Identity information:</strong> Your submitted details, SSN, and license files are encrypted before storage and automatically deleted after 30 days. Your account remains active until it is manually deleted. Your password is stored only as a one-way hash. Only an authorized administrator can review the identity documents. Do not submit real identity documents until this service is deployed over HTTPS with appropriate privacy and security arrangements.</p>
+        </div>
+        <label class="consent" for="contact-consent">
+          <input id="contact-consent" name="contactConsent" type="checkbox" required>
+          <span>I consent to the collection and encrypted storage of the information and identity documents above for review, understand my submitted identity information will be deleted after 30 days and my account retained until manually deleted, and agree Aivestora.com may contact me about my submission.</span>
+        </label>
+        <button class="submit" id="submit-button" type="submit">Submit securely</button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite" hidden></p>
+      </form>
+      <!-- <p class="disclaimer">Submissions are for this prototype and are not a substitute for a compliant identity-verification service.</p> -->
+    </section>
+  </main>
+  <script>
+    const registrationForm = document.getElementById("register-form");
+    const submitButton = document.getElementById("submit-button");
+    const formStatus = document.getElementById("form-status");
+    const accountPassword = document.getElementById("account-password");
+    const confirmPassword = document.getElementById("confirm-password");
+
+    function validatePasswordConfirmation() {
+      confirmPassword.setCustomValidity(
+        confirmPassword.value && confirmPassword.value !== accountPassword.value
+          ? "The passwords do not match."
+          : ""
+      );
+    }
+    accountPassword.addEventListener("input", validatePasswordConfirmation);
+    confirmPassword.addEventListener("input", validatePasswordConfirmation);
+
+    document.querySelectorAll('input[type="file"]').forEach((input) => {
+      input.addEventListener("change", () => {
+        const hint = document.getElementById(`${input.id}-hint`);
+        const file = input.files[0];
+        if (!file) {
+          hint.textContent = "JPEG, PNG, WebP, or PDF · max 8 MB.";
+          return;
+        }
+        if (file.size > 8 * 1024 * 1024) {
+          input.setCustomValidity("Each file must be 8 MB or smaller.");
+          hint.textContent = "File is too large. Choose a file smaller than 8 MB.";
+          return;
+        }
+        input.setCustomValidity("");
+        hint.textContent = `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+      });
+    });
+
+    registrationForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!registrationForm.reportValidity()) return;
+      formStatus.hidden = true;
+      formStatus.classList.remove("error");
+      submitButton.disabled = true;
+      submitButton.textContent = "Uploading securely…";
+      try {
+        const response = await fetch("/api/submissions", {
+          method: "POST",
+          body: new FormData(registrationForm)
+        });
+        const responseText = await response.text();
+        let result = null;
+        if (responseText) {
+          try {
+            result = JSON.parse(responseText);
+          } catch (error) {
+            if (response.ok) {
+              throw new Error("The server did not confirm whether your account was created. Try signing in before submitting again.");
+            }
+          }
+        }
+        if (!response.ok) {
+          const message = result && typeof result.error === "string"
+            ? result.error
+            : response.status === 405
+              ? "This server does not support account creation. Open the registration page at http://127.0.0.1:3000/register.html with the project server running."
+              : response.status === 404
+                ? "The account-creation service was not found. Open the registration page at http://127.0.0.1:3000/register.html with the project server running."
+            : response.status === 413
+              ? "Each identity document must be 8 MB or smaller."
+              : response.status === 429
+                ? "Too many submissions. Please wait and try again."
+                : `Account creation failed (HTTP ${response.status}). Please try again.`;
+          throw new Error(message);
+        }
+        if (!result || typeof result.message !== "string" || typeof result.id !== "string") {
+          throw new Error("The server did not confirm whether your account was created. Try signing in before submitting again.");
+        }
+        window.location.assign("/dashboard.html");
+      } catch (error) {
+        formStatus.textContent = error instanceof TypeError
+          ? "Could not connect to the upload service. Start the project server and try again."
+          : error.message;
+        formStatus.classList.add("error");
+        formStatus.hidden = false;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit securely";
+      }
+    });
+  </script>
+</body>
+</html>

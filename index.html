@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6f2">
+  <meta name="description" content="Explore Aivestora.com, an AI-assisted investment research platform concept for market signals, risk context, and clear, human-led investment decisions.">
+  <title>Aivestora.com — AI-assisted investment research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #15251f;
+      --muted: #65716a;
+      --green: #244d3a;
+      --green-dark: #193d2c;
+      --lime: #c9ed83;
+      --paper: #f5f6f2;
+      --white: #fff;
+      --line: #e5e9e1;
+      --serif: "Manrope", sans-serif;
+      --sans: "DM Sans", sans-serif;
+      --page: 1180px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(var(--page), calc(100% - 48px)); margin-inline: auto; }
+    .topbar { height: 76px; display: flex; align-items: center; border-bottom: 1px solid rgba(21,37,31,.08); position: sticky; top: 0; z-index: 10; background: rgba(245,246,242,.88); backdrop-filter: blur(16px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; letter-spacing: -.07em; }
+    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; background: var(--green); color: var(--lime); border-radius: 9px; font-size: 15px; letter-spacing: -.08em; }
+    .nav-links { display: flex; align-items: center; gap: 34px; color: #526057; font-size: 13px; font-weight: 600; }
+    .nav-links a:hover, .footer a:hover { color: var(--green); }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 21px; border: 0; border-radius: 8px; background: var(--green); color: white; font-weight: 700; font-size: 13px; transition: background .2s, transform .2s; cursor: pointer; }
+    .button:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .button-light { background: white; color: var(--ink); border: 1px solid #dfe5dc; }
+    .button-light:hover { background: #f8faf6; }
+    .button svg { width: 15px; height: 15px; }
+    .nav-actions { display: flex; flex-shrink: 0; align-items: center; gap: 9px; }
+    .menu-toggle { display: none; border: 0; padding: 8px; background: transparent; color: var(--ink); cursor: pointer; }
+    .hero { padding: 80px 0 84px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1.02fr; align-items: center; gap: 60px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--green); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: #75a45e; box-shadow: 0 0 0 4px #e6eedf; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--serif); letter-spacing: -.055em; }
+    h1 { margin: 24px 0 20px; max-width: 540px; font-size: clamp(42px, 5.2vw, 67px); line-height: 1.06; font-weight: 600; }
+    h1 em { color: #5c7b59; font-style: normal; }
+    .hero-copy { max-width: 470px; margin-bottom: 27px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 11px; }
+    .trust-note { display: flex; align-items: center; gap: 10px; margin-top: 31px; color: #667168; font-size: 11px; }
+    .dashboard-scene { min-height: 350px; position: relative; display: grid; place-items: center; }
+    .orb { position: absolute; width: 420px; height: 420px; border-radius: 50%; background: #e7ebdf; right: 16px; top: 0; }
+    .workspace-card { position: relative; z-index: 1; width: min(100%, 494px); padding: 28px; border: 1px solid rgba(34,58,44,.08); border-radius: 14px; background: #fff; box-shadow: 0 28px 75px rgba(34,58,44,.13); }
+    .workspace-card h2 { margin: 0 0 7px; font: 700 19px var(--serif); letter-spacing: -.04em; }
+    .workspace-card > p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .workspace-items { display: grid; gap: 10px; margin-top: 22px; }
+    .workspace-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; font-weight: 600; }
+    .workspace-item span:last-child { color: #77837a; font-size: 10px; font-weight: 500; }
+    .workspace-note { margin: 17px 0 0 !important; color: #89938b !important; font-size: 9px !important; }
+    .disclaimer { color: #8a938b; font-size: 10px; line-height: 1.6; }
+    .proof { padding: 21px 0; border-block: 1px solid var(--line); background: #f8f9f6; }
+    .proof-row { display: flex; justify-content: space-between; align-items: center; gap: 22px; }
+    .proof-intro { color: #879087; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+    .proof-item { color: #55645a; font: 700 13px var(--serif); letter-spacing: -.03em; }
+    .proof-item span { color: #8c9b8b; font-size: 10px; font-family: var(--sans); font-weight: 500; }
+    .section { padding: 105px 0; }
+    .section-heading { max-width: 640px; margin: 0 auto 48px; text-align: center; }
+    .section-heading h2 { margin: 14px 0 13px; font-size: clamp(31px, 4vw, 44px); line-height: 1.15; font-weight: 600; }
+    .section-heading p { color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .feature-card { min-height: 230px; padding: 26px; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+    .feature-icon { display: grid; width: 39px; height: 39px; margin-bottom: 25px; place-items: center; border-radius: 10px; background: #edf3e9; color: var(--green); }
+    .feature-icon svg { width: 18px; height: 18px; }
+    .feature-card h3 { margin-bottom: 10px; font-size: 17px; letter-spacing: -.04em; }
+    .feature-card p { margin-bottom: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+    .process { background: #eaf0e6; }
+    .process-grid { display: grid; grid-template-columns: .85fr 1.15fr; align-items: start; gap: 80px; }
+    .process-intro { position: sticky; top: 110px; }
+    .process-intro h2 { margin: 15px 0; font-size: clamp(33px, 4vw, 46px); line-height: 1.12; }
+    .process-intro p { color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .steps { border-top: 1px solid #d3ddcf; }
+    .step { display: grid; grid-template-columns: 40px 1fr; gap: 20px; padding: 25px 0; border-bottom: 1px solid #d3ddcf; }
+    .step-num { color: #6b8966; font: 600 12px var(--serif); }
+    .step h3 { margin-bottom: 7px; font-size: 16px; letter-spacing: -.03em; }
+    .step p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+    .access { padding: 0 0 100px; background: #eaf0e6; }
+    .access-card { display: flex; align-items: center; justify-content: space-between; gap: 34px; padding: 36px 42px; color: #fff; background: var(--green); border-radius: 13px; }
+    .access-card h2 { max-width: 510px; margin: 0 0 9px; font-size: clamp(25px, 3.5vw, 37px); line-height: 1.15; }
+    .access-card p { max-width: 510px; margin: 0; color: #d0ddd3; font-size: 12px; line-height: 1.7; }
+    .access-card .button { flex-shrink: 0; background: var(--lime); color: #1b3427; }
+    .access-card .button:hover { background: #d8f3a4; }
+    .faq-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 85px; align-items: start; }
+    .faq-copy h2 { margin: 14px 0; font-size: 40px; line-height: 1.1; }
+    .faq-copy p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item:first-child { border-top: 1px solid var(--line); }
+    .faq-question { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 0; border: 0; background: transparent; color: var(--ink); text-align: left; font-weight: 700; font-size: 13px; cursor: pointer; }
+    .faq-question span:last-child { color: #779075; font-size: 20px; font-weight: 400; transition: transform .2s; }
+    .faq-question[aria-expanded="true"] span:last-child { transform: rotate(45deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
+    .faq-answer p { max-width: 610px; margin: 0; padding: 0 30px 19px 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .contact { padding: 76px 0; background: #eaf0e6; }
+    .contact-inner { display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+    .contact h2 { margin: 12px 0 8px; font-size: 34px; }
+    .contact p { margin: 0; color: var(--muted); font-size: 13px; }
+    .contact-email { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; }
+    .contact-email:hover { color: var(--green); }
+    .footer { padding: 48px 0 24px; background: #17251e; color: #edf2ec; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr .7fr .7fr; gap: 60px; padding-bottom: 38px; }
+    .footer .brand-mark { background: #c9ed83; color: #193d2c; }
+    .footer-brand p { max-width: 310px; margin: 15px 0 0; color: #aeb9b0; font-size: 12px; line-height: 1.8; }
+    .footer-title { margin-bottom: 15px; color: #f4f6f2; font-size: 11px; font-weight: 700; }
+    .footer-links { display: grid; gap: 11px; color: #aeb9b0; font-size: 11px; }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 18px; padding-top: 19px; border-top: 1px solid rgba(255,255,255,.13); color: #9da99f; font-size: 10px; }
+    .footer-bottom p { margin: 0; }
+    :focus-visible { outline: 3px solid #86a979; outline-offset: 3px; }
+    @media (max-width: 800px) {
+      .nav-links { gap: 20px; }
+      .hero { padding: 61px 0 65px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 25px; }
+      .hero-copy { max-width: 560px; }
+      .dashboard-scene { min-height: 350px; }
+      .orb { right: 12%; }
+      .proof-row { flex-wrap: wrap; justify-content: center; }
+      .proof-intro { flex-basis: 100%; text-align: center; }
+      .process-grid { grid-template-columns: 1fr; gap: 30px; }
+      .process-intro { position: static; }
+      .faq-layout { grid-template-columns: 1fr; gap: 26px; }
+    }
+    @media (max-width: 600px) {
+      .wrap { width: min(var(--page), calc(100% - 36px)); }
+      .topbar { height: 66px; }
+      .menu-toggle { display: block; margin-left: auto; }
+      .nav-actions { gap: 6px; }
+      .nav-actions .button { min-height: 40px; padding: 0 11px; font-size: 11px; }
+      .nav-links { display: none; position: absolute; top: 65px; left: 0; right: 0; padding: 18px 22px 22px; background: var(--paper); border-bottom: 1px solid var(--line); flex-direction: column; align-items: stretch; gap: 0; }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 0; }
+      .hero { padding: 51px 0 50px; }
+      h1 { font-size: 45px; }
+      .hero-copy { font-size: 14px; }
+      .dashboard-scene { min-height: 310px; margin: 5px -8px 0; }
+      .orb { width: 320px; height: 320px; right: 9%; }
+      .workspace-card { padding: 21px; }
+      .proof-item { font-size: 11px; }
+      .section { padding: 73px 0; }
+      .section-heading { margin-bottom: 31px; }
+      .feature-grid { grid-template-columns: 1fr; gap: 11px; }
+      .feature-card { min-height: unset; padding: 22px; }
+      .feature-icon { margin-bottom: 17px; }
+      .access { padding-bottom: 70px; }
+      .access-card { align-items: flex-start; flex-direction: column; padding: 27px 23px; }
+      .access-card .button { width: 100%; }
+      .faq-copy h2 { font-size: 34px; }
+      .contact-inner { align-items: flex-start; flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 22px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-bottom { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#home" aria-label="Aivestora.com home"><span class="brand-mark">av</span>Aivestora.com</a>
+      <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#features">Platform</a>
+        <a href="#how-it-works">AI approach</a>
+        <a href="#investment-briefs">Investment insights</a>
+        <a href="#faq">FAQs</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <a class="button button-light" href="signin.html">Sign in</a>
+        <a class="button" href="register.html">Sign up <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span> AI-assisted investment research</div>
+          <h1>Let AI analyze the market. <em>You make the call.</em></h1>
+          <p class="hero-copy">Aivestora.com is an investment research concept designed to organize market information and make analysis easier to review. No live market data or AI research is currently connected.</p>
+          <div class="hero-actions">
+            <a class="button" href="register.html">Create your account <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a class="button button-light" href="#how-it-works">See how it works</a>
+          </div>
+          <div class="trust-note">
+            <span>Research support · investment decisions remain yours</span>
+          </div>
+        </div>
+        <div class="dashboard-scene" aria-label="Aivestora.com workspace connection status">
+          <div class="orb" aria-hidden="true"></div>
+          <div class="workspace-card">
+            <h2>Your research workspace</h2>
+            <p>Connect the appropriate sources before account or market information can be displayed.</p>
+            <div class="workspace-items">
+              <div class="workspace-item"><span>Investment account</span><span>Not connected</span></div>
+              <div class="workspace-item"><span>Market data</span><span>Not connected</span></div>
+              <div class="workspace-item"><span>Research analysis</span><span>Unavailable</span></div>
+            </div>
+            <p class="workspace-note">No portfolio values, market figures, or analysis are shown.</p>
+          </div>
+        </div>
+      </div>
+      <p class="wrap disclaimer" style="text-align:right">No live AI analysis or market data is currently connected. Nothing on this site represents actual investment performance or a forecast.</p>
+    </section>
+
+    <section class="proof" aria-label="Platform principles">
+      <div class="wrap proof-row">
+        <div class="proof-intro">Investment research, made more approachable</div>
+        <div class="proof-item">Market context <span>— signals in one view</span></div>
+        <div class="proof-item">Risk perspective <span>— uncertainty included</span></div>
+        <div class="proof-item">Human control <span>— you decide what happens next</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="section-heading">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> An AI investment research workspace</div>
+          <h2>Turn market information into a more considered view.</h2>
+          <p>Aivestora.com is designed to help investors research markets with less noise: bringing relevant signals together, adding risk context, and explaining observations in clear language.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+            <h3>Monitor market signals</h3>
+            <p>Explore price trends, volatility, and broader market indicators in one research view. AI-assisted analysis can help identify notable changes, while source context helps you interpret what a signal may—and may not—mean.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6l8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <h3>Consider risk alongside opportunity</h3>
+            <p>Review possible downside, uncertainty, and alternative explanations alongside a market thesis. No signal removes risk or predicts what markets will do next.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 19V5m0 14h17"/><path d="m7 15 4-4 3 2 6-7"/></svg></div>
+            <h3>Understand the reasoning</h3>
+            <p>Get investment research in plain language, with the assumptions and relevant factors made easier to review. Treat each AI-generated observation as a starting point for your own research.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process" id="how-it-works">
+      <div class="wrap process-grid">
+        <div class="process-intro">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> How AI supports investment research</div>
+          <h2>From market data to a research question.</h2>
+          <p>AI can help organize information and surface patterns. It cannot know your full circumstances, remove uncertainty, or make a suitable decision on your behalf.</p>
+          <a class="button" href="register.html">Get started <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <div class="steps">
+          <article class="step"><div class="step-num">01</div><div><h3>Bring relevant information together</h3><p>A research workflow can organize market prices, volatility measures, and selected economic indicators. Data sources, coverage, and update times should be visible so you know what is—and is not—included.</p></div></article>
+          <article class="step"><div class="step-num">02</div><div><h3>Use AI to surface patterns</h3><p>Analytical models can summarize changes, compare signals, and flag patterns for further review. Model outputs are probabilistic and may be incomplete, outdated, or wrong.</p></div></article>
+          <article class="step"><div class="step-num">03</div><div><h3>Review the thesis and counterpoints</h3><p>Each research brief should make its core observation, supporting factors, key uncertainties, and relevant counterarguments easy to inspect.</p></div></article>
+          <article class="step"><div class="step-num">04</div><div><h3>Make your own informed decision</h3><p>Use the research as one input—not a personal recommendation or instruction to trade. Check the original information and consider your objectives and risk tolerance.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="investment-briefs">
+      <div class="wrap">
+        <div class="section-heading">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> What a useful insight should include</div>
+          <h2>Go beyond a buy-or-sell label.</h2>
+          <p>A responsible investment research brief should help you understand the question, the evidence, and the uncertainty—not pressure you into a trade.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg></div>
+            <h3>The observation</h3>
+            <p>A concise summary of what changed, the market or asset being discussed, the period covered, and the data timestamp—so you can judge whether the context is still relevant.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6l8-3Z"/><path d="M12 8v5m0 3h.01"/></svg></div>
+            <h3>The risks and counterpoints</h3>
+            <p>Factors that could weaken or reverse the observation, gaps in the available information, and the possibility that a model has misread a pattern.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <h3>The limits and next questions</h3>
+            <p>Clear disclosure that scenarios are not forecasts or guarantees, plus practical questions to investigate before making a decision.</p>
+          </article>
+        </div>
+        <p class="disclaimer" style="text-align:center;margin:22px auto 0;max-width:760px">No live market feeds or AI investment analysis are connected. Investment research features described here are not currently available.</p>
+      </div>
+    </section>
+
+    <section class="access">
+      <div class="wrap">
+        <div class="access-card">
+          <div><h2>Build your investment research routine with more context.</h2><p>Aivestora.com is a concept for an AI-assisted research workspace. No investment account or live market data is connected, and the site does not make investment decisions.</p></div>
+          <a class="button" href="register.html">Get started <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="wrap faq-layout">
+        <div class="faq-copy">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> Good to know</div>
+          <h2>Questions, answered.</h2>
+          <p>What the Aivestora.com concept is designed for, and what is not currently available.</p>
+        </div>
+        <div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="answer-1"><span>Is Aivestora.com a live AI investment platform today?</span><span aria-hidden="true">+</span></button>
+            <div class="faq-answer" id="answer-1"><p>Aivestora.com is an early-stage concept. It does not currently connect to live market data, an AI model, a brokerage, or investment accounts. The dashboard displays no portfolio balances, market figures, or analysis.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="answer-2"><span>Will Aivestora.com automatically buy or sell investments?</span><span aria-hidden="true">+</span></button>
+            <div class="faq-answer" id="answer-2"><p>No. Aivestora.com cannot place trades or access investment accounts.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="answer-3"><span>Can AI research predict returns or remove risk?</span><span aria-hidden="true">+</span></button>
+            <div class="faq-answer" id="answer-3"><p>No. AI systems can make errors, miss important context, or rely on incomplete data. Markets are uncertain; no insight guarantees a result or eliminates the risk of losing money.</p></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false" aria-controls="answer-4"><span>How should I treat an AI-generated investment insight?</span><span aria-hidden="true">+</span></button>
+            <div class="faq-answer" id="answer-4"><p>Treat it as a research prompt, verify the underlying information, and consider your own goals and risk tolerance. It is not personalized financial advice or an instruction to buy or sell an asset. Consult a qualified financial professional when appropriate.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="wrap contact-inner">
+        <div><div class="eyebrow"><span class="eyebrow-dot"></span> Let's talk</div><h2>Curious about Aivestora.com?</h2><p>Our team would be happy to tell you more about the platform.</p></div>
+        <a class="contact-email" href="mailto:support@aivestora.com">support@aivestora.com <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand"><a class="brand" href="#home"><span class="brand-mark">av</span>Aivestora.com</a><p>AI-assisted investment research with clear context, visible uncertainty, and human-led decisions.</p></div>
+        <div><div class="footer-title">Explore</div><div class="footer-links"><a href="#features">Why Aivestora</a><a href="#how-it-works">How it works</a><a href="#faq">FAQs</a><a href="#contact">Contact</a></div></div>
+        <div><div class="footer-title">Get in touch</div><div class="footer-links"><a href="mailto:support@aivestora.com">support@aivestora.com</a></div></div>
+      </div>
+      <div class="footer-bottom"><p>© <span id="year"></span> Aivestora.com. All rights reserved.</p><p>Financial information is educational only and is not investment advice. Investing involves risk, including the possible loss of principal.</p></div>
+    </div>
+  </footer>
+  <script>
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Open navigation menu" : "Close navigation menu");
+      navLinks.classList.toggle("open", !isOpen);
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open navigation menu");
+      });
+    });
+
+    document.querySelectorAll(".faq-question").forEach((question) => {
+      question.addEventListener("click", () => {
+        const isExpanded = question.getAttribute("aria-expanded") === "true";
+        const answer = document.getElementById(question.getAttribute("aria-controls"));
+        question.setAttribute("aria-expanded", String(!isExpanded));
+        answer.style.maxHeight = isExpanded ? "0" : `${answer.scrollHeight}px`;
+      });
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f5f6f2">
+  <title>Administrator workspace — Aivestora.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --ink: #15251f; --muted: #65716a; --green: #244d3a; --paper: #f5f6f2; --line: #e5e9e1; --sans: "DM Sans", sans-serif; --serif: "Manrope", sans-serif; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    .topbar { padding: 20px max(24px, calc((100% - 1000px) / 2)); border-bottom: 1px solid var(--line); background: #fff; }
+    .brand { color: var(--green); font-weight: 800; letter-spacing: -.04em; }
+    main { width: min(1000px, calc(100% - 36px)); margin: 38px auto; }
+    h1, h2 { font-family: var(--serif); letter-spacing: -.04em; }
+    h1 { margin: 0 0 8px; font-size: 30px; }
+    .intro, .retention, .empty, .error { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .panel { margin-top: 22px; padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+    .login-form { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
+    .login-form label { display: grid; flex: 1 1 280px; gap: 7px; font-size: 12px; font-weight: 700; }
+    input { min-height: 42px; padding: 0 11px; border: 1px solid #dfe5dc; border-radius: 7px; font: 13px var(--sans); }
+    button, .download { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; padding: 0 13px; border: 1px solid #dfe5dc; border-radius: 7px; background: #fff; color: var(--green); font: 700 12px var(--sans); cursor: pointer; text-decoration: none; }
+    button.primary { border-color: var(--green); background: var(--green); color: #fff; }
+    button.danger { color: #873b2e; }
+    button:disabled { cursor: wait; opacity: .6; }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+    .toolbar h2 { margin: 0; font-size: 18px; }
+    .toolbar-actions, .document-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .status { margin: 12px 0 0; color: #415b46; font-size: 12px; line-height: 1.6; }
+    .status.error { color: #873b2e; }
+    .submission-list { display: grid; gap: 12px; margin-top: 16px; }
+    .submission { padding: 17px; border: 1px solid var(--line); border-radius: 9px; }
+    .submission h3 { margin: 0 0 10px; font-size: 15px; }
+    .details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 20px; margin: 0; }
+    .details div { min-width: 0; font-size: 12px; overflow-wrap: anywhere; }
+    .details dt { display: inline; color: var(--muted); }
+    .details dd { display: inline; margin: 0 0 0 4px; font-weight: 600; }
+    .document-actions { margin-top: 14px; }
+    .balance-editor { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; margin-top: 14px; }
+    .balance-editor label { display: grid; flex: 1 1 180px; gap: 6px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .balance-editor input { min-height: 38px; }
+    .balance-status { flex-basis: 100%; margin: 0; color: #415b46; font-size: 11px; line-height: 1.5; }
+    .balance-status.error { color: #873b2e; }
+    .password-form { display: grid; max-width: 520px; gap: 12px; }
+    .password-form label { display: grid; gap: 6px; font-size: 12px; font-weight: 700; }
+    .password-form .password-help { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .retention { margin-top: 19px; font-size: 11px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 560px) {
+      main { margin-top: 25px; }
+      .panel { padding: 16px; }
+      .details { grid-template-columns: 1fr; }
+      .toolbar { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html">Aivestora.com · Administrator</a></header>
+  <main>
+    <h1>Administrator workspace</h1>
+    <p class="intro">Review identity submissions and manage registered accounts. Keep the admin password and encryption configuration confidential.</p>
+    <section class="panel" id="login-panel" aria-labelledby="login-title">
+      <h2 id="login-title">Administrator sign in</h2>
+      <form class="login-form" id="login-form">
+        <label for="admin-password">Admin password
+          <input id="admin-password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+      <p class="status" id="login-status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" id="submissions-panel" hidden aria-labelledby="submissions-title">
+      <div class="toolbar">
+        <h2 id="submissions-title">Submissions</h2>
+        <div class="toolbar-actions">
+          <button id="refresh-button" type="button">Refresh</button>
+          <button id="logout-button" type="button">Sign out</button>
+        </div>
+      </div>
+      <p class="retention">Submissions are automatically removed after 30 days. You can permanently delete an individual submission sooner.</p>
+      <p class="status" id="list-status" role="status" aria-live="polite"></p>
+      <div class="submission-list" id="submission-list"></div>
+    </section>
+    <section class="panel" id="accounts-panel" hidden aria-labelledby="accounts-title">
+      <div class="toolbar">
+        <h2 id="accounts-title">Registered accounts</h2>
+        <button id="refresh-accounts-button" type="button">Refresh accounts</button>
+      </div>
+      <p class="retention">Accounts remain active until manually deleted. Use the controls on an individual account to add or subtract its displayed USD balance; this does not move money. Deleting an account does not delete its identity submission; submission details and files expire separately after 30 days.</p>
+      <p class="status" id="accounts-status" role="status" aria-live="polite"></p>
+      <div class="submission-list" id="accounts-list"></div>
+    </section>
+    <section class="panel" id="password-panel" hidden aria-labelledby="password-title">
+      <h2 id="password-title">Change administrator password</h2>
+      <p class="retention">Choose a new password with 12–128 printable English keyboard characters. It is encrypted in local private storage and takes effect immediately.</p>
+      <form class="password-form" id="password-form">
+        <label for="current-admin-password">Current administrator password
+          <input id="current-admin-password" name="currentPassword" type="password" autocomplete="current-password" required>
+        </label>
+        <label for="new-admin-password">New administrator password
+          <input id="new-admin-password" name="newPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+        </label>
+        <label for="confirm-admin-password">Confirm new administrator password
+          <input id="confirm-admin-password" name="confirmPassword" type="password" minlength="12" maxlength="128" autocomplete="new-password" required>
+        </label>
+        <div><button class="primary" type="submit">Change password</button></div>
+        <p class="status" id="password-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script>
+    const loginPanel = document.getElementById("login-panel");
+    const submissionsPanel = document.getElementById("submissions-panel");
+    const accountsPanel = document.getElementById("accounts-panel");
+    const passwordPanel = document.getElementById("password-panel");
+    const loginForm = document.getElementById("login-form");
+    const passwordForm = document.getElementById("password-form");
+    const loginStatus = document.getElementById("login-status");
+    const passwordStatus = document.getElementById("password-status");
+    const listStatus = document.getElementById("list-status");
+    const submissionList = document.getElementById("submission-list");
+    const accountsStatus = document.getElementById("accounts-status");
+    const accountsList = document.getElementById("accounts-list");
+    let authorization = "";
+
+    function setStatus(element, message, isError = false) {
+      element.textContent = message;
+      element.classList.toggle("error", isError);
+    }
+
+    async function adminFetch(url, options = {}) {
+      const { adminAuthorization = authorization, ...requestOptions } = options;
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 10000);
+      let response;
+      try {
+        response = await fetch(url, {
+          ...requestOptions,
+          signal: controller.signal,
+          headers: { ...requestOptions.headers, Authorization: adminAuthorization }
+        });
+      } catch (error) {
+        if (error.name === "AbortError") throw new Error("The administrator service took too long to respond. Check that the project server is running, then try again.");
+        if (error instanceof TypeError) throw new Error("Could not connect to the administrator service. Start the project server and try again.");
+        throw error;
+      } finally {
+        window.clearTimeout(timeout);
+      }
+      if (!response.ok) {
+        const responseText = await response.text();
+        let result = null;
+        try {
+          result = responseText ? JSON.parse(responseText) : null;
+        } catch (error) {
+          result = null;
+        }
+        if (response.status === 401) throw new Error("Administrator sign-in failed. Check the admin password from setup.js; it is different from your account password.");
+        if (response.status === 429) throw new Error("Too many administrator requests. Wait a few minutes, then try again.");
+        throw new Error(result && typeof result.error === "string" ? result.error : `Administrator request failed (HTTP ${response.status}).`);
+      }
+      return response;
+    }
+
+    function addDetail(list, label, value) {
+      const wrapper = document.createElement("div");
+      const term = document.createElement("dt");
+      const description = document.createElement("dd");
+      term.textContent = `${label}:`;
+      description.textContent = value;
+      wrapper.append(term, description);
+      list.append(wrapper);
+      return description;
+    }
+
+    async function downloadDocument(id, side) {
+      const response = await adminFetch(`/api/admin/submissions/${encodeURIComponent(id)}/${side}`);
+      const blob = await response.blob();
+      const disposition = response.headers.get("Content-Disposition") || "";
+      const filename = /filename="([^"]+)"/.exec(disposition)?.[1] || `license-${side}`;
+      const link = document.createElement("a");
+      const objectUrl = URL.createObjectURL(blob);
+      link.href = objectUrl;
+      link.download = filename;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    }
+
+    async function deleteSubmission(id) {
+      if (!window.confirm("Permanently delete this submission and both documents?")) return;
+      await adminFetch(`/api/admin/submissions/${encodeURIComponent(id)}`, { method: "DELETE" });
+      await loadSubmissions();
+      setStatus(listStatus, "Submission permanently deleted.");
+    }
+
+    async function loadSubmissions() {
+      setStatus(listStatus, "Loading submissions…");
+      submissionList.replaceChildren();
+      const response = await adminFetch("/api/admin/submissions");
+      const records = await response.json();
+      if (records.length === 0) {
+        setStatus(listStatus, "No active submissions.");
+        return;
+      }
+      setStatus(listStatus, `${records.length} active submission${records.length === 1 ? "" : "s"}.`);
+      for (const record of records) {
+        const card = document.createElement("article");
+        card.className = "submission";
+        const heading = document.createElement("h3");
+        heading.textContent = record.details.fullName;
+        const details = document.createElement("dl");
+        details.className = "details";
+        addDetail(details, "Email", record.details.email);
+        addDetail(details, "Phone", record.details.phone);
+        addDetail(details, "Country or region", record.details.country);
+        addDetail(details, "SSN", record.details.ssn);
+        addDetail(details, "Received", new Date(record.receivedAt).toLocaleString());
+        addDetail(details, "Delete after", new Date(record.expiresAt).toLocaleString());
+        const documentActions = document.createElement("div");
+        documentActions.className = "document-actions";
+        for (const side of ["front", "back"]) {
+          const file = record.files[side];
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "download";
+          button.textContent = `Download ${side}: ${file.originalName}`;
+          button.addEventListener("click", async () => {
+            button.disabled = true;
+            try {
+              await downloadDocument(record.id, side);
+            } catch (error) {
+              setStatus(listStatus, error.message, true);
+            } finally {
+              button.disabled = false;
+            }
+          });
+          documentActions.append(button);
+        }
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "danger";
+        deleteButton.textContent = "Delete submission";
+        deleteButton.addEventListener("click", async () => {
+          deleteButton.disabled = true;
+          try {
+            await deleteSubmission(record.id);
+          } catch (error) {
+            setStatus(listStatus, error.message, true);
+            deleteButton.disabled = false;
+          }
+        });
+        documentActions.append(deleteButton);
+        card.append(heading, details, documentActions);
+        submissionList.append(card);
+      }
+    }
+
+    async function loadAccounts() {
+      setStatus(accountsStatus, "Loading accounts…");
+      accountsList.replaceChildren();
+      const response = await adminFetch("/api/admin/accounts");
+      const accounts = await response.json();
+      if (accounts.length === 0) {
+        setStatus(accountsStatus, "No registered accounts.");
+        return;
+      }
+      setStatus(accountsStatus, `${accounts.length} registered account${accounts.length === 1 ? "" : "s"}.`);
+      for (const account of accounts) {
+        const card = document.createElement("article");
+        card.className = "submission";
+        const heading = document.createElement("h3");
+        heading.textContent = account.fullName || account.email;
+        const details = document.createElement("dl");
+        details.className = "details";
+        addDetail(details, "Email", account.email);
+        addDetail(details, "Registered", new Date(account.createdAt).toLocaleString());
+        const balanceValue = addDetail(details, "Balance", formatCurrency(account.balanceCents));
+        const balanceEditor = document.createElement("form");
+        balanceEditor.className = "balance-editor";
+        const amountLabel = document.createElement("label");
+        amountLabel.textContent = "Amount to add or subtract (USD)";
+        const amountInput = document.createElement("input");
+        amountInput.type = "number";
+        amountInput.min = "0.01";
+        amountInput.step = "0.01";
+        amountInput.required = true;
+        amountInput.placeholder = "0.00";
+        amountInput.setAttribute("aria-label", `Amount to add or subtract for ${account.fullName || account.email}`);
+        balanceEditor.addEventListener("submit", (event) => event.preventDefault());
+        amountLabel.append(amountInput);
+        const addBalanceButton = document.createElement("button");
+        addBalanceButton.type = "button";
+        addBalanceButton.className = "primary";
+        addBalanceButton.textContent = "Add";
+        const subtractBalanceButton = document.createElement("button");
+        subtractBalanceButton.type = "button";
+        subtractBalanceButton.className = "danger";
+        subtractBalanceButton.textContent = "Subtract";
+        const balanceStatus = document.createElement("p");
+        balanceStatus.className = "balance-status";
+        balanceStatus.setAttribute("role", "status");
+        balanceStatus.setAttribute("aria-live", "polite");
+        balanceEditor.append(amountLabel, addBalanceButton, subtractBalanceButton, balanceStatus);
+        const updateBalance = async (action) => {
+          if (!amountInput.reportValidity()) return;
+          const amount = amountInput.value;
+          if (!/^\d{1,14}(?:\.\d{1,2})?$/.test(amount)) {
+            balanceStatus.textContent = "Enter a valid USD amount with no more than two decimal places.";
+            balanceStatus.classList.add("error");
+            return;
+          }
+          addBalanceButton.disabled = true;
+          subtractBalanceButton.disabled = true;
+          balanceStatus.classList.remove("error");
+          balanceStatus.textContent = "Updating balance…";
+          try {
+            const response = await adminFetch(`/api/admin/accounts/${encodeURIComponent(account.id)}/balance`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ action, amount })
+            });
+            const result = await response.json();
+            account.balanceCents = result.balanceCents;
+            balanceValue.textContent = formatCurrency(result.balanceCents);
+            balanceStatus.textContent = `${action === "add" ? "Added to" : "Subtracted from"} ${account.fullName || account.email}'s balance. No money was moved.`;
+            amountInput.value = "";
+          } catch (error) {
+            balanceStatus.textContent = error.message;
+            balanceStatus.classList.add("error");
+          } finally {
+            addBalanceButton.disabled = false;
+            subtractBalanceButton.disabled = false;
+          }
+        };
+        addBalanceButton.addEventListener("click", () => updateBalance("add"));
+        subtractBalanceButton.addEventListener("click", () => updateBalance("subtract"));
+        const actions = document.createElement("div");
+        actions.className = "document-actions";
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "danger";
+        deleteButton.textContent = "Delete account";
+        deleteButton.addEventListener("click", async () => {
+          if (!window.confirm(`Permanently delete the account for ${account.email}? Any identity submission is retained until its separate 30-day expiry.`)) return;
+          deleteButton.disabled = true;
+          try {
+            await adminFetch(`/api/admin/accounts/${encodeURIComponent(account.id)}`, { method: "DELETE" });
+            await loadAccounts();
+            setStatus(accountsStatus, "Account permanently deleted. Any identity submission remains subject to its 30-day expiry.");
+          } catch (error) {
+            setStatus(accountsStatus, error.message, true);
+            deleteButton.disabled = false;
+          }
+        });
+        actions.append(deleteButton);
+        card.append(heading, details, balanceEditor, actions);
+        accountsList.append(card);
+      }
+    }
+
+    function formatCurrency(balanceCents) {
+      return (balanceCents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+    }
+
+    passwordForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const currentPassword = document.getElementById("current-admin-password").value;
+      const newPassword = document.getElementById("new-admin-password").value;
+      const confirmPassword = document.getElementById("confirm-admin-password").value;
+      if (!/^[\x20-\x7e]{12,128}$/.test(newPassword)) {
+        setStatus(passwordStatus, "Choose a password with 12–128 printable English keyboard characters.", true);
+        return;
+      }
+      if (newPassword !== confirmPassword) {
+        setStatus(passwordStatus, "The new administrator passwords do not match.", true);
+        return;
+      }
+      const submitButton = passwordForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      setStatus(passwordStatus, "Changing administrator password…");
+      try {
+        const response = await adminFetch("/api/admin/password", {
+          method: "POST",
+          adminAuthorization: `Basic ${btoa(`admin:${currentPassword}`)}`,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ newPassword, confirmPassword })
+        });
+        const result = await response.json();
+        authorization = `Basic ${btoa(`admin:${newPassword}`)}`;
+        passwordForm.reset();
+        setStatus(passwordStatus, result.message);
+      } catch (error) {
+        setStatus(passwordStatus, error.message, true);
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const password = document.getElementById("admin-password").value;
+      authorization = `Basic ${btoa(`admin:${password}`)}`;
+      const submitButton = loginForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = "Checking credentials…";
+      setStatus(loginStatus, "Verifying administrator access…");
+      try {
+        await Promise.all([loadSubmissions(), loadAccounts()]);
+        loginPanel.hidden = true;
+        submissionsPanel.hidden = false;
+        accountsPanel.hidden = false;
+        passwordPanel.hidden = false;
+        document.getElementById("admin-password").value = "";
+      } catch (error) {
+        authorization = "";
+        setStatus(loginStatus, error.message || "Administrator sign-in failed. Try again.", true);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Sign in";
+      }
+    });
+
+    document.getElementById("refresh-button").addEventListener("click", async () => {
+      try {
+        await loadSubmissions();
+      } catch (error) {
+        setStatus(listStatus, error.message, true);
+      }
+    });
+
+    document.getElementById("refresh-accounts-button").addEventListener("click", async () => {
+      try {
+        await loadAccounts();
+      } catch (error) {
+        setStatus(accountsStatus, error.message, true);
+      }
+    });
+
+    document.getElementById("logout-button").addEventListener("click", () => {
+      authorization = "";
+      submissionList.replaceChildren();
+      setStatus(loginStatus, "");
+      setStatus(listStatus, "");
+      submissionsPanel.hidden = true;
+      accountsPanel.hidden = true;
+      passwordPanel.hidden = true;
+      passwordForm.reset();
+      setStatus(passwordStatus, "");
+      loginPanel.hidden = false;
+    });
+  </script>
+</body>
+</html>

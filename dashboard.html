@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f6f2">
+  <meta name="description" content="Aivestora.com investment research workspace. No account or live market data is connected.">
+  <title>Dashboard — Aivestora.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --ink: #17251e; --muted: #738078; --green: #244d3a; --lime: #c9ed83; --paper: #f4f6f2; --line: #e8ece6; --sans: "DM Sans", sans-serif; --serif: "Manrope", sans-serif; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; }
+    .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 10; display: flex; width: 226px; flex-direction: column; padding: 25px 17px 18px; border-right: 1px solid var(--line); background: #fff; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; padding: 0 8px; font-size: 20px; font-weight: 800; letter-spacing: -.07em; }
+    .brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; background: var(--green); color: var(--lime); font-size: 15px; letter-spacing: -.08em; }
+    .workspace { margin: 35px 8px 12px; color: #a0aaa1; font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .side-nav { display: grid; gap: 5px; }
+    .side-link { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 7px; color: #727e75; font-size: 12px; font-weight: 600; }
+    .side-link svg { width: 17px; height: 17px; }
+    .side-link:hover, .side-link.active { background: #eef3eb; color: var(--green); }
+    .profile { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 17px 5px 0; }
+    .avatar { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #e8eedf; color: var(--green); font-size: 11px; font-weight: 700; }
+    .profile strong { display: block; font-size: 10px; }
+    .profile span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+    .sign-out { margin: 14px 5px 0; padding: 7px 0; border: 0; background: transparent; color: var(--green); text-align: left; font-size: 10px; font-weight: 700; cursor: pointer; }
+    .account-status { margin: 7px 5px 0; color: #873b2e; font-size: 9px; line-height: 1.5; }
+    .main { min-height: 100vh; margin-left: 226px; }
+    .topbar { position: sticky; top: 0; z-index: 5; display: flex; height: 68px; align-items: center; justify-content: space-between; padding: 0 38px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.9); backdrop-filter: blur(14px); }
+    .breadcrumb { color: #89938b; font-size: 11px; }
+    .breadcrumb strong { color: #3d4d43; }
+    .top-actions { display: flex; align-items: center; gap: 11px; }
+    .connection-label { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid #e5eadf; border-radius: 20px; background: #f7f9f4; color: #68736b; font-size: 9px; font-weight: 700; }
+    .connection-label i { width: 6px; height: 6px; border-radius: 50%; background: #a2aaa3; }
+    .icon-button { display: none; width: 34px; height: 34px; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
+    .icon-button svg { width: 16px; height: 16px; }
+    .content { width: min(1110px, 100%); margin: 0 auto; padding: 34px 38px 48px; }
+    .welcome-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 24px; }
+    .eyebrow { color: #6b8865; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--serif); letter-spacing: -.05em; }
+    h1 { margin: 7px 0 5px; font-size: 30px; font-weight: 600; }
+    .welcome-row p { margin: 0; color: var(--muted); font-size: 11px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+    .card { border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+    .stat-card { min-height: 112px; padding: 17px; }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 10px; }
+    .stat-top svg { width: 15px; height: 15px; color: #8ca184; }
+    .stat-value { margin-top: 14px; font: 700 22px var(--serif); letter-spacing: -.06em; }
+    .stat-meta { margin-top: 5px; color: #839087; font-size: 9px; }
+    .chart-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(220px, .9fr); gap: 14px; margin-top: 14px; }
+    .chart-card, .allocation-card { min-width: 0; padding: 19px; }
+    .card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .card-heading h2, .table-head h2 { margin: 0 0 5px; font-size: 14px; font-weight: 700; }
+    .card-heading p, .table-head p { margin: 0; color: var(--muted); font-size: 9px; }
+    .market-controls { display: flex; flex-wrap: wrap; gap: 5px; margin: 15px 0 10px; }
+    .market-tab { padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--muted); font-size: 9px; font-weight: 700; cursor: pointer; }
+    .market-tab[aria-pressed="true"] { border-color: #cddbc7; background: #eef3eb; color: var(--green); }
+    .market-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin: 15px 0 4px; }
+    .market-price { font: 700 20px var(--serif); letter-spacing: -.04em; }
+    .market-change { font-size: 10px; font-weight: 700; }
+    .market-change.positive, .market-signal.positive { color: #34734a; }
+    .market-change.negative, .market-signal.negative { color: #a34436; }
+    .market-signal.neutral { color: #65716a; }
+    .chart-svg { display: block; width: 100%; height: 210px; overflow: visible; }
+    .chart-gridline { stroke: #edf0ec; stroke-width: 1; }
+    .chart-line { fill: none; stroke: #34734a; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-area { fill: url(#trend-fill); }
+    .chart-axis-label { fill: #89938b; font: 10px var(--sans); }
+    .chart-zero-line { stroke: #cbd2ca; stroke-width: 1; stroke-dasharray: 4 4; }
+    .signal-bar.positive { fill: #6a9b65; }
+    .signal-bar.negative { fill: #cb7667; }
+    .signal-bar.neutral { fill: #b6beb6; }
+    .chart-status { min-height: 30px; margin: 10px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .chart-status.error { color: #873b2e; }
+    .chart-status[hidden] { display: none; }
+    .table-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .table-head > div { min-width: 0; }
+    .signal-summary { text-align: right; font-size: 10px; font-weight: 700; }
+    .empty-state { display: grid; min-height: 190px; place-content: center; gap: 7px; padding: 24px; color: var(--muted); text-align: center; }
+    .empty-state strong { color: var(--ink); font-size: 12px; }
+    .empty-state span { font-size: 10px; line-height: 1.6; }
+    .table-card { margin-top: 14px; overflow: hidden; }
+    .table-head { padding: 17px 19px; }
+    .signal-chart-wrap { padding: 0 19px 12px; }
+    .signal-chart { height: 130px; }
+    .table-empty { margin: 0; padding: 18px 19px; border-top: 1px solid #f0f2ef; color: var(--muted); font-size: 11px; }
+    .disclaimer { margin: 17px 0 0; color: #89938b; font-size: 9px; line-height: 1.6; }
+    .mobile-menu { display: none; }
+    :focus-visible { outline: 3px solid #86a979; outline-offset: 3px; }
+    @media (max-width: 1100px) {
+      .sidebar { width: 190px; }
+      .main { margin-left: 190px; }
+      .topbar { padding-inline: 25px; }
+      .content { padding-inline: 25px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .chart-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .sidebar { width: 250px; transform: translateX(-100%); transition: transform .2s ease; box-shadow: 15px 0 35px #17251e1a; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .topbar { height: 60px; padding-inline: 16px; }
+      .mobile-menu { display: grid; margin-right: 10px; }
+      .breadcrumb { margin-right: auto; }
+      .top-actions { gap: 7px; }
+      .content { padding: 25px 16px 35px; }
+      .welcome-row { align-items: flex-start; flex-direction: column; }
+      h1 { font-size: 26px; }
+      .stats-grid { gap: 9px; }
+      .stat-card { min-height: 104px; padding: 13px; }
+      .stat-value { font-size: 19px; }
+      .chart-card, .allocation-card { padding: 15px; }
+      .table-head { padding: 14px; }
+      .signal-chart-wrap { padding-inline: 14px; }
+    }
+    @media (max-width: 390px) {
+      .connection-label { font-size: 8px; padding: 6px 8px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stat-top { font-size: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar" aria-label="Dashboard navigation">
+    <a class="brand" href="index.html"><span class="brand-mark">av</span>Aivestora.com</a>
+    <div class="workspace">Workspace</div>
+    <nav class="side-nav">
+      <a class="side-link active" href="#overview" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>Overview</a>
+      <a class="side-link" href="#markets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 6-7"/></svg>Market signals</a>
+      <a class="side-link" href="#allocation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v9h9"/><path d="M19.4 15A8 8 0 1 1 9 4.1"/></svg>Allocation</a>
+    </nav>
+    <div class="profile"><div class="avatar" id="account-avatar" aria-hidden="true">AV</div><div><strong id="account-name">Loading account…</strong></div></div>
+    <button class="sign-out" id="sign-out" type="button">Sign out</button>
+    <p class="account-status" id="account-status" role="status" aria-live="polite"></p>
+  </aside>
+
+  <main class="main" id="overview">
+    <header class="topbar">
+      <button class="icon-button mobile-menu" id="menu-toggle" type="button" aria-label="Open dashboard menu" aria-expanded="false" aria-controls="sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Overview</strong></div>
+      <div class="top-actions"><span class="connection-label" id="connection-label"><i></i> Loading market data</span></div>
+    </header>
+    <div class="content">
+      <section aria-labelledby="welcome-title">
+        <div class="welcome-row">
+          <div><div class="eyebrow" id="dashboard-date"></div><h1 id="welcome-title">Your market overview</h1><p>Your account balance is manually maintained. Market charts use live index data when available.</p></div>
+        </div>
+        <div class="stats-grid">
+          <article class="card stat-card"><div class="stat-top"><span>Portfolio balance</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 6h18v14H3zM3 10h18M7 6V4h10v2"/></svg></div><div class="stat-value" id="portfolio-balance">$0.00</div><div class="stat-meta">Manually maintained; no investment account connected</div></article>
+          <article class="card stat-card"><div class="stat-top"><span>Market movement</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m4 16 6-6 4 4 6-8M14 6h6v6"/></svg></div><div class="stat-value" id="market-movement">0.00%</div><div class="stat-meta" id="market-movement-meta">Zero baseline; no live market feed</div></article>
+          <article class="card stat-card"><div class="stat-top"><span>Risk profile</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 20 6v5c0 5-3.4 8.2-8 10-4.6-1.8-8-5-8-10V6l8-3Z"/></svg></div><div class="stat-value">0</div><div class="stat-meta">Not assessed; starting score</div></article>
+          <article class="card stat-card"><div class="stat-top"><span>Signals reviewed</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></svg></div><div class="stat-value">0</div><div class="stat-meta">No signals available</div></article>
+        </div>
+      </section>
+
+      <div class="chart-layout">
+        <section class="card chart-card" id="markets" aria-labelledby="performance-title">
+          <div class="card-heading"><div><h2 id="performance-title">Market trend</h2><p id="market-chart-subtitle">Illustrative pattern · not live market data</p></div></div>
+          <div class="market-controls" role="group" aria-label="Select market index">
+            <button class="market-tab" type="button" data-market-symbol="SPX" aria-pressed="true">S&amp;P 500</button>
+            <button class="market-tab" type="button" data-market-symbol="NDX" aria-pressed="false">Nasdaq 100</button>
+            <button class="market-tab" type="button" data-market-symbol="DJI" aria-pressed="false">Dow Jones</button>
+          </div>
+          <div class="market-summary"><strong class="market-price" id="market-price">—</strong><span class="market-change" id="market-change"></span></div>
+          <svg class="chart-svg" id="market-trend-chart" viewBox="0 0 640 210" role="img" aria-label="Loading market trend chart"></svg>
+          <p class="chart-status" id="market-chart-status" role="status" aria-live="polite">Showing an illustrative pattern while live data loads…</p>
+        </section>
+        <section class="card allocation-card" id="allocation" aria-labelledby="allocation-title">
+          <div class="card-heading"><div><h2 id="allocation-title">Portfolio allocation</h2><p>Allocation will appear when portfolio data is available.</p></div></div>
+          <div class="empty-state"><strong>No portfolio connected</strong><span>Portfolio allocation is not available.</span></div>
+        </section>
+      </div>
+
+      <section class="card table-card" aria-labelledby="signals-title">
+        <div class="table-head"><div><h2 id="signals-title">Market signals</h2><p id="signal-description">A 20-session momentum indicator derived from the selected index.</p></div><strong class="signal-summary market-signal neutral" id="market-signal">Waiting for data</strong></div>
+        <div class="signal-chart-wrap"><svg class="chart-svg signal-chart" id="market-signal-chart" viewBox="0 0 640 130" role="img" aria-label="Loading daily market movement signal chart"></svg></div>
+        <p class="table-empty" id="signal-chart-status">Daily percentage changes will appear when live market data is available.</p>
+      </section>
+      <p class="disclaimer">The displayed balance is manually maintained and does not represent money held or transferred by Aivestora. Market charts and momentum indicators are informational, may be delayed, and are not financial advice.</p>
+    </div>
+  </main>
+  <script>
+    document.getElementById("dashboard-date").textContent = new Intl.DateTimeFormat("en-US", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric"
+    }).format(new Date());
+
+    try {
+      localStorage.removeItem("aivestora-demo-balance-v1");
+    } catch (error) {
+      console.error("Unable to clear the old sample balance from browser storage.", error);
+    }
+
+    const accountName = document.getElementById("account-name");
+    const accountStatus = document.getElementById("account-status");
+    const marketStatus = document.getElementById("market-chart-status");
+    const connectionLabel = document.getElementById("connection-label");
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    let quoteSocket = null;
+    let activeMarketSymbol = null;
+    let activeMarketResult = null;
+
+    function addSvgElement(svg, name, attributes, text) {
+      const element = document.createElementNS(svgNamespace, name);
+      for (const [attribute, value] of Object.entries(attributes)) element.setAttribute(attribute, value);
+      if (text) element.textContent = text;
+      svg.append(element);
+      return element;
+    }
+
+    function drawTrendChart(history, name) {
+      const svg = document.getElementById("market-trend-chart");
+      svg.replaceChildren();
+      const width = 640;
+      const left = 58;
+      const right = 624;
+      const top = 18;
+      const bottom = 174;
+      const prices = history.map((item) => item.close);
+      const minimum = Math.min(...prices);
+      const maximum = Math.max(...prices);
+      const spread = maximum - minimum || Math.abs(maximum) * 0.01 || 1;
+      const low = minimum - spread * 0.08;
+      const high = maximum + spread * 0.08;
+      const x = (index) => left + (right - left) * index / Math.max(history.length - 1, 1);
+      const y = (price) => bottom - (price - low) / (high - low) * (bottom - top);
+      for (let index = 0; index < 3; index += 1) {
+        const gridY = top + (bottom - top) * index / 2;
+        addSvgElement(svg, "line", { x1: left, x2: right, y1: gridY, y2: gridY, class: "chart-gridline" });
+        const price = high - (high - low) * index / 2;
+        addSvgElement(svg, "text", { x: left - 8, y: gridY + 3, "text-anchor": "end", class: "chart-axis-label" }, price.toLocaleString("en-US", { maximumFractionDigits: 2 }));
+      }
+      const points = history.map((item, index) => `${x(index)},${y(item.close)}`).join(" ");
+      addSvgElement(svg, "polyline", { points, class: "chart-line" });
+      addSvgElement(svg, "circle", { cx: x(history.length - 1), cy: y(prices[prices.length - 1]), r: 4, fill: "#34734a" });
+      addSvgElement(svg, "text", { x: left, y: 202, class: "chart-axis-label" }, history[0].date);
+      addSvgElement(svg, "text", { x: right, y: 202, "text-anchor": "end", class: "chart-axis-label" }, history[history.length - 1].date);
+      svg.setAttribute("aria-label", `${name} daily closing prices for the last ${history.length} trading sessions`);
+    }
+
+    function drawSignalChart(history, name) {
+      const svg = document.getElementById("market-signal-chart");
+      svg.replaceChildren();
+      const left = 58;
+      const right = 624;
+      const baseline = 60;
+      const dailyChanges = history.slice(1).map((item) => item.changePercent);
+      const maximum = Math.max(0.1, ...dailyChanges.map(Math.abs));
+      const chartHeight = 42;
+      addSvgElement(svg, "line", { x1: left, x2: right, y1: baseline, y2: baseline, class: "chart-zero-line" });
+      const step = (right - left) / dailyChanges.length;
+      dailyChanges.forEach((change, index) => {
+        const barHeight = Math.max(1, Math.abs(change) / maximum * chartHeight);
+        addSvgElement(svg, "rect", {
+          x: left + index * step + step * 0.18,
+          y: change >= 0 ? baseline - barHeight : baseline,
+          width: Math.max(1, step * 0.64),
+          height: barHeight,
+          rx: 1,
+          class: `signal-bar ${change > 0.02 ? "positive" : change < -0.02 ? "negative" : "neutral"}`
+        });
+      });
+      addSvgElement(svg, "text", { x: left, y: 119, class: "chart-axis-label" }, history[1].date);
+      addSvgElement(svg, "text", { x: right, y: 119, "text-anchor": "end", class: "chart-axis-label" }, history[history.length - 1].date);
+      svg.setAttribute("aria-label", `${name} daily percentage change bars for the last ${dailyChanges.length} trading sessions`);
+    }
+
+    function drawIllustrativeTrend() {
+      const svg = document.getElementById("market-trend-chart");
+      svg.replaceChildren();
+      const left = 58;
+      const right = 624;
+      const top = 18;
+      const bottom = 174;
+      for (let index = 0; index < 3; index += 1) {
+        const gridY = top + (bottom - top) * index / 2;
+        addSvgElement(svg, "line", { x1: left, x2: right, y1: gridY, y2: gridY, class: "chart-gridline" });
+      }
+      addSvgElement(svg, "path", {
+        d: `M ${left} 143 C 96 126, 111 151, 139 125 S 187 137, 217 112 S 262 121, 296 91 S 340 115, 373 83 S 420 99, 451 70 S 502 91, 532 56 S 579 67, ${right} 31`,
+        class: "chart-line"
+      });
+      addSvgElement(svg, "text", { x: left, y: 202, class: "chart-axis-label" }, "Illustrative");
+      addSvgElement(svg, "text", { x: right, y: 202, "text-anchor": "end", class: "chart-axis-label" }, "Not live data");
+      svg.setAttribute("aria-label", "Illustrative market trend pattern, not live market data");
+    }
+
+    function connectLiveQuotes(symbol, previousClose) {
+      if (quoteSocket) quoteSocket.close();
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      quoteSocket = new WebSocket(`${protocol}//${window.location.host}/api/market-stream?symbol=${encodeURIComponent(symbol)}`);
+      quoteSocket.addEventListener("message", (event) => {
+        let update;
+        try {
+          update = JSON.parse(event.data);
+        } catch (error) {
+          console.error("The live quote stream returned invalid data.", error);
+          return;
+        }
+        if (symbol !== activeMarketSymbol) return;
+        if (update.type === "status" && update.status === "connected") {
+          connectionLabel.lastChild.textContent = " Live quote stream";
+          marketStatus.hidden = true;
+          return;
+        }
+        if (update.type === "error") {
+          marketStatus.textContent = `${update.message} The daily chart remains available.`;
+          marketStatus.classList.add("error");
+          marketStatus.hidden = false;
+          connectionLabel.lastChild.textContent = " Daily data only";
+          return;
+        }
+        if (update.type !== "quote" || update.symbol !== symbol ||
+            !Number.isFinite(update.price) || update.price <= 0) return;
+
+        const dailyChange = ((update.price - previousClose) / previousClose) * 100;
+        document.getElementById("market-price").textContent = update.price.toLocaleString("en-US", { maximumFractionDigits: 2 });
+        const changeElement = document.getElementById("market-change");
+        changeElement.textContent = `${dailyChange >= 0 ? "+" : ""}${dailyChange.toFixed(2)}% today`;
+        changeElement.className = `market-change ${dailyChange > 0 ? "positive" : dailyChange < 0 ? "negative" : "neutral"}`;
+        document.getElementById("market-movement").textContent = `${dailyChange >= 0 ? "+" : ""}${dailyChange.toFixed(2)}%`;
+        document.getElementById("market-movement-meta").textContent = `${activeMarketResult.name} live daily change`;
+        const lastPoint = activeMarketResult.history[activeMarketResult.history.length - 1];
+        lastPoint.close = update.price;
+        lastPoint.changePercent = dailyChange;
+        drawTrendChart(activeMarketResult.history, activeMarketResult.name);
+        drawSignalChart(activeMarketResult.history, activeMarketResult.name);
+        connectionLabel.lastChild.textContent = " Live quote stream";
+      });
+      quoteSocket.addEventListener("error", () => {
+        if (symbol !== activeMarketSymbol) return;
+        marketStatus.textContent = "Live quote streaming is unavailable. The daily chart remains available.";
+        marketStatus.classList.add("error");
+        marketStatus.hidden = false;
+        connectionLabel.lastChild.textContent = " Daily data only";
+      });
+      quoteSocket.addEventListener("close", () => {
+        if (symbol === activeMarketSymbol && activeMarketResult && !marketStatus.hidden) {
+          connectionLabel.lastChild.textContent = " Daily data only";
+        }
+      });
+    }
+
+    async function loadMarketData(symbol) {
+      activeMarketSymbol = symbol;
+      activeMarketResult = null;
+      marketStatus.hidden = false;
+      marketStatus.classList.remove("error");
+      marketStatus.textContent = "Showing an illustrative pattern while live data loads…";
+      document.getElementById("market-chart-subtitle").textContent = "Live daily index prices · last 30 sessions";
+      if (quoteSocket) {
+        quoteSocket.close();
+        quoteSocket = null;
+      }
+      try {
+        const response = await fetch(`/api/market/${encodeURIComponent(symbol)}`);
+        const responseText = await response.text();
+        let result = null;
+        if (responseText) {
+          try {
+            result = JSON.parse(responseText);
+          } catch (error) {
+            throw new Error(`The market-data service returned an invalid response (HTTP ${response.status}).`);
+          }
+        }
+        if (!result || typeof result !== "object") {
+          throw new Error(`The market-data service returned an empty response (HTTP ${response.status}).`);
+        }
+        if (!response.ok) throw new Error(result.error || `Market data request failed (${response.status}).`);
+        if (!Array.isArray(result.history) || result.history.length < 2) {
+          throw new Error("The market-data provider returned insufficient chart history.");
+        }
+        activeMarketResult = result;
+        const change = Number(result.dailyChangePercent);
+        document.getElementById("market-price").textContent = Number(result.currentPrice).toLocaleString("en-US", { maximumFractionDigits: 2 });
+        const changeElement = document.getElementById("market-change");
+        changeElement.textContent = `${change >= 0 ? "+" : ""}${change.toFixed(2)}% today`;
+        changeElement.className = `market-change ${change > 0 ? "positive" : change < 0 ? "negative" : "neutral"}`;
+        document.getElementById("market-movement").textContent = `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`;
+        document.getElementById("market-movement-meta").textContent = `${result.name} daily change`;
+        drawTrendChart(result.history, result.name);
+        drawSignalChart(result.history, result.name);
+        const signal = document.getElementById("market-signal");
+        signal.textContent = result.signal.label;
+        signal.className = `signal-summary market-signal ${result.signal.direction}`;
+        const returnText = Number.isFinite(result.twentyDayChangePercent)
+          ? `20-session change: ${result.twentyDayChangePercent >= 0 ? "+" : ""}${result.twentyDayChangePercent.toFixed(2)}%. `
+          : "";
+        document.getElementById("signal-description").textContent = `${returnText}20-session momentum indicator; informational, not a recommendation.`;
+        document.getElementById("signal-chart-status").textContent = "Daily percentage changes; green bars are up sessions and red bars are down sessions.";
+        connectionLabel.lastChild.textContent = " Live market data";
+        marketStatus.hidden = true;
+        connectLiveQuotes(symbol, result.previousClose);
+      } catch (error) {
+        if (quoteSocket) {
+          quoteSocket.close();
+          quoteSocket = null;
+        }
+        activeMarketResult = null;
+        console.error("Unable to load live market data.", error);
+        drawIllustrativeTrend();
+        document.getElementById("market-chart-subtitle").textContent = "Illustrative pattern · not live market data";
+        document.getElementById("market-signal").textContent = "Unavailable";
+        document.getElementById("market-signal").className = "signal-summary market-signal neutral";
+        document.getElementById("signal-description").textContent = "Live market signals are unavailable without a connected data source.";
+        document.getElementById("market-signal-chart").replaceChildren();
+        document.getElementById("market-signal-chart").setAttribute("aria-label", "No live market signal data is available");
+        document.getElementById("signal-chart-status").textContent = "No signal chart is shown because live market data is unavailable.";
+        document.getElementById("market-price").textContent = "—";
+        document.getElementById("market-change").textContent = "";
+        document.getElementById("market-movement").textContent = "0.00%";
+        document.getElementById("market-movement-meta").textContent = "Zero baseline; live data unavailable";
+        marketStatus.textContent = error instanceof TypeError
+          ? "Could not connect to the live market-data service. The chart shown is illustrative only."
+          : `${error.message} The chart shown is illustrative only.`;
+        marketStatus.classList.add("error");
+        connectionLabel.lastChild.textContent = " Illustrative chart only";
+      }
+    }
+
+    fetch("/api/auth/session")
+      .then(async (response) => {
+        if (response.status === 401) {
+          window.location.replace("/signin.html");
+          return null;
+        }
+        if (response.status === 404 || response.status === 405) {
+          throw new Error("The account service is unavailable here. Start the project server and open http://127.0.0.1:3000/dashboard.html.");
+        }
+        if (!response.ok) throw new Error(`Account check failed (${response.status}).`);
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          throw new Error("The account service did not return account data. Start the project server and open http://127.0.0.1:3000/dashboard.html.");
+        }
+        return response.json();
+      })
+      .then((session) => {
+        if (session) {
+          const displayName = typeof session.name === "string" && session.name.trim() && !session.name.includes("@")
+            ? session.name.trim()
+            : "Account";
+          accountName.textContent = displayName;
+          document.getElementById("portfolio-balance").textContent = (session.balanceCents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+          const initials = displayName.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+          document.getElementById("account-avatar").textContent = initials || "AV";
+          document.getElementById("welcome-title").textContent = `Welcome, ${displayName.split(/\s+/)[0]}`;
+        }
+      })
+      .catch((error) => {
+        console.error("Unable to verify the signed-in account.", error);
+        accountStatus.textContent = error instanceof TypeError
+          ? "Could not connect to the account service. Start the project server and open http://127.0.0.1:3000/dashboard.html."
+          : error.message;
+      });
+
+    document.querySelectorAll("[data-market-symbol]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-market-symbol]").forEach((item) => {
+          item.setAttribute("aria-pressed", String(item === button));
+        });
+        loadMarketData(button.dataset.marketSymbol);
+      });
+    });
+    drawIllustrativeTrend();
+    loadMarketData("SPX");
+
+    document.getElementById("sign-out").addEventListener("click", async () => {
+      const signOutButton = document.getElementById("sign-out");
+      signOutButton.disabled = true;
+      try {
+        const response = await fetch("/api/auth/logout", { method: "POST" });
+        if (!response.ok) throw new Error(`Sign out failed (${response.status}).`);
+        window.location.assign("/index.html");
+      } catch (error) {
+        console.error("Unable to sign out.", error);
+        accountStatus.textContent = "Sign out failed. Try again.";
+        signOutButton.disabled = false;
+      }
+    });
+
+    const menuToggle = document.getElementById("menu-toggle");
+    const sidebar = document.getElementById("sidebar");
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Open dashboard menu" : "Close dashboard menu");
+      sidebar.classList.toggle("open", !isOpen);
+    });
+    sidebar.querySelectorAll(".side-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        sidebar.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open dashboard menu");
+      });
+    });
+  </script>
+</body>
+</html>
